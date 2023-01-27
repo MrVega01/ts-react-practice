@@ -35,6 +35,7 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-case-declarations": 0
     }
 }

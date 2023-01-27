@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './App.css'
 import Form from './components/Form'
 import List from './components/List'
@@ -23,6 +23,7 @@ interface AppStates {
 
 function App() {
 	const [subs, setSubs] = useState<AppStates['subs']>([])
+	const ref = useRef<HTMLDivElement>(null)
 
 	useEffect(()=>{
 		setSubs(INITIAL_STATE)
@@ -33,7 +34,7 @@ function App() {
 	}
 
 	return (
-		<div className="App">
+		<div className="App" ref={ref}>
 			<h1>Services subs</h1>
 			<Form onNewSub={handlerNewSub} />
 			<List subs={subs}/>

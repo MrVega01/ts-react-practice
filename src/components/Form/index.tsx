@@ -1,38 +1,39 @@
-import React, { useState } from 'react'
+import React from 'react'
+import useNewSubForm from '../../hooks/useNewSubForm'
 import { Sub } from '../../types'
 
 interface FormProps {
     onNewSub: (newSub: Sub) => void
 }
 
-interface FormStates {
-	inputValues: Sub
-}
-
 export default function Form({ onNewSub }: FormProps){
-	const [inputValues, setInputValues] = useState<FormStates['inputValues']>({
-		nick: '',
-		subMonths: 0,
-		avatar: '',
-		description: ''
-	})
+	const [inputValues, dispatch] = useNewSubForm()
+
 	const handlerSubmit = (e: React.FormEvent<HTMLFormElement>)=> {
 		e.preventDefault()
 		onNewSub(inputValues)
+		handlerClear()
 	}
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInputValues({
-			...inputValues,
-			[e.target.name]: e.target.value
+	const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		dispatch({
+			type: 'change_value',
+			payload: {
+				inputName: e.target.name,
+				inputValue: e.target.value
+			} 
 		})
+	}
+	const handlerClear = () => {
+		dispatch({type: 'clear'})
 	}
 	return(
 		<form onSubmit={handlerSubmit}>
-			<input onChange={handleChange} value={inputValues.nick} type="text" name="nick" placeholder='nick' />
-			<input onChange={handleChange} value={inputValues.subMonths}type="number" name="subMonths" placeholder='subMonths' />
-			<input onChange={handleChange} value={inputValues.avatar}type="text" name="avatar" placeholder='avatar' />
-			<input onChange={handleChange} value={inputValues.description}type="text" name="description" placeholder='description' />
-			<button>Save sub</button>
+			<input onChange={handlerChange} value={inputValues.nick} type="text" name="nick" placeholder='nick' />
+			<input onChange={handlerChange} value={inputValues.subMonths}type="number" name="subMonths" placeholder='subMonths' />
+			<input onChange={handlerChange} value={inputValues.avatar}type="text" name="avatar" placeholder='avatar' />
+			<input onChange={handlerChange} value={inputValues.description}type="text" name="description" placeholder='description' />
+			<button type='button' onClick={handlerClear}>Clear form</button>
+			<button type='submit'>Save sub</button>
 		</form>
 	)
 }
